@@ -1,0 +1,59 @@
+-- Tabela krajów
+CREATE TABLE countries (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+-- Przykładowe kraje
+INSERT INTO countries (name) VALUES
+('Polska'),
+('Hiszpania'),
+('Francja'),
+('USA'),
+('Australia');
+
+-- Tabela zawodników
+CREATE TABLE players (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    birth_date DATE NOT NULL,
+    country_id INTEGER NOT NULL REFERENCES countries(id),
+    ranking INTEGER NOT NULL CHECK (ranking BETWEEN 1 AND 1000),
+    is_active BOOLEAN NOT NULL
+);
+
+-- Przykładowy zawodnik
+INSERT INTO players (first_name, last_name, birth_date, country_id, ranking, is_active)
+VALUES ('Iga', 'Świątek', '2001-05-31', 1, 1, TRUE);
+-- Tabela turniejów
+CREATE TABLE tournaments (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    location VARCHAR(100) NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL
+);
+
+-- Tabela meczów 1v1
+CREATE TABLE matches (
+    id SERIAL PRIMARY KEY,
+    tournament_id INTEGER NOT NULL REFERENCES tournaments(id),
+    player1_id INTEGER NOT NULL REFERENCES players(id),
+    player2_id INTEGER NOT NULL REFERENCES players(id),
+    match_date DATE NOT NULL,
+    winner_id INTEGER REFERENCES players(id),
+    score TEXT
+);
+
+INSERT INTO tournaments (name, location, start_date, end_date)
+VALUES ('Roland Garros', 'Paryż', '2025-05-20', '2025-06-10');
+
+INSERT INTO tournaments (name, location, start_date, end_date)
+VALUES ('turniejowy turniej', 'Paryż', '2025-05-20', '2025-06-10');
+
+INSERT INTO matches (tournament_id, player1_id, player2_id, match_date, winner_id, score)
+VALUES (1, 1, 2, '2025-05-21', 1, '6:3, 6:2');
+
+INSERT INTO players (first_name, last_name, birth_date, country_id, ranking, is_active)
+VALUES ('Olaf', 'Slowik', '2003-09-30', 1, 2, TRUE);
